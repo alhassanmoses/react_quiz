@@ -27,15 +27,9 @@ class Counter extends Component {
   }
 }
 class Total extends Component {
-  total = 0;
-
   render() {
-    let array = this.props.data;
-
-    array.data.map((sum) => {
-      this.total += sum.value;
-    });
-    return <div>{<h1>{this.total}</h1>}</div>;
+    let { sum } = this.props;
+    return <div>{<h1>sum of values is: {sum}</h1>}</div>;
   }
 }
 
@@ -53,25 +47,33 @@ class App extends Component {
 
     this.state = { data: [...this.data] };
   }
+  //variable to store sum of values
+  sum = 0;
+  //function to get sum of values each time an increment or decrement is made
+  getSum(arr) {
+    let val = 0;
+    for (let i = 0; i < arr.length; i++) {
+      val += arr[i].value;
+    }
+    this.sum = val;
+  }
 
+  //funtion to increment values
   onIncrement = (index, value) => {
-    //
-    console.log(`I called ${index}`);
-    //
     let temp = this.state;
     temp.data[index].value = ++value;
-    console.log(`Value is ${value}`);
     this.setState(temp);
+    this.getSum(temp.data);
   };
+
+  //function to decrement values
   onDecrement = (index, value) => {
-    //
-    console.log(`D called ${index}`);
-    //
     let temp = this.state;
-    console.log(temp.data[index].value);
 
     temp.data[index].value = --value;
+
     this.setState(temp);
+    this.getSum(temp.data);
   };
 
   render() {
@@ -88,7 +90,7 @@ class App extends Component {
             />
           ))}
         </div>
-        <Total data={this.state} />
+        <Total sum={this.sum} />
       </>
     );
   }
